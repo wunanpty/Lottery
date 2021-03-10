@@ -50,6 +50,7 @@ namespace WindowsFormsLottery
 
         private bool isGoOn = true;
         private List<Task> taskList = new List<Task>();
+        private static readonly object LotteryViewForm_Lock = new object();
         #endregion
 
         #region UI
@@ -79,7 +80,6 @@ namespace WindowsFormsLottery
 
                 Thread.Sleep(1000);
                 TaskFactory taskFactory = new TaskFactory();
-
                 foreach (var control in this.groupBox.Controls)
                 {
                     if (control is Label)
@@ -106,18 +106,33 @@ namespace WindowsFormsLottery
                         {
                             taskFactory.StartNew(() =>
                             {
-                                // Get a number from BlueNums
+                                // Get a number from RedNums
+                                // How to make sure the six red numbers are non-duplicated number?
+                                //      check current labels' text, see if this number is already exist
+                                // But, there is another case might make two labels have same number
+                                //      due to multi-thread, at some moment, it might happen that there are 2 thread 
+                                //      check the current labels, and found there is no 7, so both of them update label with 7
+                                //      so we need a lock here
                                 while (true)
                                 {
                                     int indexNum = new RandomHelper().GetRandomNumberDelay(0, this.RedNums.Length);
                                     string sNumber = this.RedNums[indexNum];
-                                    this.UpdateLabel(lbl, sNumber);
+                                    lock (LotteryViewForm_Lock)
+                                    {
+                                        if (this.IsExist(sNumber))
+                                        {
+                                            continue;
+                                        }
+                                        this.UpdateLabel(lbl, sNumber);
+                                    }
+                                    
                                 }
 
                             });
                         }
                     }
                 }
+                // A correct timing to enable Stop button
                 
             }
             catch (Exception ex)
@@ -142,13 +157,29 @@ namespace WindowsFormsLottery
                 this.Invoke(new Action(() =>
                 {
                     lbl.Text = text;
-                    Console.WriteLine($"Current UpdateLabel thread id{Thread.CurrentThread.ManagedThreadId}");
+                   // Console.WriteLine($"Current UpdateLabel thread id{Thread.CurrentThread.ManagedThreadId}");
                 }));
             }
             else
             {
                 lbl.Text = text;
             }
+        }
+
+        private bool IsExist(string sNumber)
+        {
+            foreach (var control in this.groupBox.Controls)
+            {
+                if (control is Label)
+                {
+                    Label lbl = (Label)control;
+                    if (lbl.Name.Contains("Red") && lbl.Text.Equals(sNumber))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         #endregion
     }

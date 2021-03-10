@@ -33,7 +33,7 @@ namespace WindowsFormsLottery.Common
                     case 'e':
                     case 'f':
                     case 'g':
-                        seed = seed + 1;
+                        seed = seed + 11;
                         break;
                     case 'h':
                     case 'i':
@@ -42,7 +42,7 @@ namespace WindowsFormsLottery.Common
                     case 'l':
                     case 'm':
                     case 'n':
-                        seed = seed + 2;
+                        seed = seed + 21;
                         break;
                     case 'o':
                     case 'p':
@@ -50,7 +50,7 @@ namespace WindowsFormsLottery.Common
                     case 'r':
                     case 's':
                     case 't':
-                        seed = seed + 3;
+                        seed = seed + 31;
                         break;
                     case 'u':
                     case 'v':
@@ -58,10 +58,10 @@ namespace WindowsFormsLottery.Common
                     case 'x':
                     case 'y':
                     case 'z':
-                        seed = seed + 3;
+                        seed = seed + 311;
                         break;
                     default:
-                        seed = seed + 4;
+                        seed = seed + 41;
                         break;
                 }
             }
