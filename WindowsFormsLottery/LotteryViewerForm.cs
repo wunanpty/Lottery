@@ -89,22 +89,22 @@ namespace WindowsFormsLottery
                         //Update blue ball
                         if (lbl.Name.Contains("Blue"))
                         {
-                            taskFactory.StartNew(() =>
+                            taskList.Add(taskFactory.StartNew(() =>
                             {
                                 // Get a number from BlueNums
-                                while (true)
+                                while (this.isGoOn)
                                 {
                                     int indexNum = new RandomHelper().GetRandomNumberDelay(0, this.BlueNums.Length);
                                     string sNumber = this.BlueNums[indexNum];
                                     this.UpdateLabel(lbl, sNumber);
                                 }
                                 
-                            });
+                            }));
                         }
                         //Update red ball
                         else
                         {
-                            taskFactory.StartNew(() =>
+                           taskList.Add(taskFactory.StartNew(() =>
                             {
                                 // Get a number from RedNums
                                 // How to make sure the six red numbers are non-duplicated number?
@@ -113,27 +113,55 @@ namespace WindowsFormsLottery
                                 //      due to multi-thread, at some moment, it might happen that there are 2 thread 
                                 //      check the current labels, and found there is no 7, so both of them update label with 7
                                 //      so we need a lock here
-                                while (true)
+                                while (this.isGoOn)
                                 {
                                     int indexNum = new RandomHelper().GetRandomNumberDelay(0, this.RedNums.Length);
                                     string sNumber = this.RedNums[indexNum];
                                     lock (LotteryViewForm_Lock)
                                     {
-                                        if (this.IsExist(sNumber))
+                                        if (this.IsExistInRed(sNumber))
                                         {
                                             continue;
                                         }
                                         this.UpdateLabel(lbl, sNumber);
                                     }
-                                    
                                 }
-
-                            });
+                            }));
                         }
                     }
                 }
                 // A correct timing to enable Stop button
-                
+                // Use a thread to check if current all labels' text include "00"
+                // An example of dead-lock: UI thread wait for update, other threads wait for UI update for them
+                //while (true)
+                //{
+                //    Thread.Sleep(1000);
+                //    if (!this.IsExistInRed("00") && !this.labelBlue.Text.Equals("00"))
+                //    {
+                //        this.buttonStop.Enabled = true;
+                //        break;
+                //    }
+                //}
+                Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(1000);
+                        if (!this.IsExistInRed("00") && !this.labelBlue.Text.Equals("00"))
+                        {
+                            // Remember that we need to ask UI thread to update the button status
+                            this.Invoke(new Action(() =>
+                            {
+                                this.buttonStop.Enabled = true;
+                            }));
+                            break;
+                        }
+                    }
+                });
+
+                // Creates a continuation task that starts when a set of specified tasks has completed.
+                // after clicke the stop button, need to wait for all red and blue threads complete
+                taskFactory.ContinueWhenAll(this.taskList.ToArray(), tArray => this.ShowResult());
             }
             catch (Exception ex)
             {
@@ -145,7 +173,14 @@ namespace WindowsFormsLottery
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
-
+            this.buttonStop.Enabled = false;
+            this.buttonStart.Enabled = true;
+            this.buttonStart.Text = "Start";
+            // Let isGoOn become to false, all while loop will stop, but the already trigged thread will run until complete.
+            this.isGoOn = false;
+            // If call ShowResult() here, the message is different with labels, because there is a delay for the 
+            // the running threads
+            //this.ShowResult();
         }
 
         #region PrivateMethod
@@ -166,7 +201,7 @@ namespace WindowsFormsLottery
             }
         }
 
-        private bool IsExist(string sNumber)
+        private bool IsExistInRed(string sNumber)
         {
             foreach (var control in this.groupBox.Controls)
             {
@@ -180,6 +215,18 @@ namespace WindowsFormsLottery
                 }
             }
             return false;
+        }
+
+        private void ShowResult()
+        {
+            MessageBox.Show(string.Format("Red balls: {0} {1} {2} {3} {4} {5}  Blue ball: {6}"
+                , this.labelRed1.Text
+                , this.labelRed2.Text
+                , this.labelRed3.Text
+                , this.labelRed4.Text
+                , this.labelRed5.Text
+                , this.labelRed6.Text
+                , this.labelBlue.Text));
         }
         #endregion
     }
