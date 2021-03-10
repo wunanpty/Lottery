@@ -19,6 +19,7 @@ namespace WindowsFormsLottery
         /// To play DoubleColorball, you must select six red numbers from a pool between 1 and 33,
         /// and one blue number between 1 and 16. The blue number you select can be the same as
         /// one of the six red numbers.
+        /// The six red numbers should not have duplicated number.
         /// </summary>
         public LotteryViewerForm()
         {
@@ -66,7 +67,9 @@ namespace WindowsFormsLottery
                 #region Initial Form
                 this.buttonStart.Text = "Runing";
                 this.buttonStart.Enabled = false;
+                // Let select red and select blue threads keep running
                 this.isGoOn = true;
+                // Reset taskList
                 this.taskList = new List<Task>();
                 // Reset all balls to 00
                 this.labelBlue.Text = "00";
@@ -86,7 +89,7 @@ namespace WindowsFormsLottery
                     {
                         Label lbl = (Label)control;
 
-                        //Update blue ball
+                        //Select/Update blue ball
                         if (lbl.Name.Contains("Blue"))
                         {
                             taskList.Add(taskFactory.StartNew(() =>
@@ -101,7 +104,7 @@ namespace WindowsFormsLottery
                                 
                             }));
                         }
-                        //Update red ball
+                        //Select/Update red ball
                         else
                         {
                            taskList.Add(taskFactory.StartNew(() =>
@@ -159,6 +162,7 @@ namespace WindowsFormsLottery
                     }
                 });
 
+                // A correct timing to show Result
                 // Creates a continuation task that starts when a set of specified tasks has completed.
                 // after clicke the stop button, need to wait for all red and blue threads complete
                 taskFactory.ContinueWhenAll(this.taskList.ToArray(), tArray => this.ShowResult());
@@ -219,7 +223,7 @@ namespace WindowsFormsLottery
 
         private void ShowResult()
         {
-            MessageBox.Show(string.Format("Red balls: {0} {1} {2} {3} {4} {5}  Blue ball: {6}"
+            MessageBox.Show(string.Format("Red balls: {0}, {1}, {2}, {3}, {4}, {5}  Blue ball: {6}"
                 , this.labelRed1.Text
                 , this.labelRed2.Text
                 , this.labelRed3.Text

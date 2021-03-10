@@ -31,9 +31,9 @@ namespace WindowsFormsLottery
         {
             this.groupBox = new System.Windows.Forms.GroupBox();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.buttonStart = new System.Windows.Forms.Button();
             this.labelBlue = new System.Windows.Forms.Label();
             this.labelRed2 = new System.Windows.Forms.Label();
+            this.buttonStart = new System.Windows.Forms.Button();
             this.labelRed3 = new System.Windows.Forms.Label();
             this.labelRed4 = new System.Windows.Forms.Label();
             this.labelRed5 = new System.Windows.Forms.Label();
@@ -60,7 +60,7 @@ namespace WindowsFormsLottery
             this.groupBox.Size = new System.Drawing.Size(676, 341);
             this.groupBox.TabIndex = 0;
             this.groupBox.TabStop = false;
-            this.groupBox.Text = "Result";
+            this.groupBox.Text = "DoubleColorBall";
             // 
             // buttonStop
             // 
@@ -71,16 +71,6 @@ namespace WindowsFormsLottery
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            // 
-            // buttonStart
-            // 
-            this.buttonStart.Location = new System.Drawing.Point(497, 61);
-            this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(135, 42);
-            this.buttonStart.TabIndex = 7;
-            this.buttonStart.Text = "Start";
-            this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // labelBlue
             // 
@@ -103,6 +93,16 @@ namespace WindowsFormsLottery
             this.labelRed2.Size = new System.Drawing.Size(41, 32);
             this.labelRed2.TabIndex = 5;
             this.labelRed2.Text = "00";
+            // 
+            // buttonStart
+            // 
+            this.buttonStart.Location = new System.Drawing.Point(497, 61);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(135, 42);
+            this.buttonStart.TabIndex = 7;
+            this.buttonStart.Text = "Start";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
             // labelRed3
             // 
