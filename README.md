@@ -16,12 +16,12 @@
 - How to terminate threads run
 
 ### Snapshot
-Lanuch Appliction
-![image](https://user-images.githubusercontent.com/29477330/110700710-1d887080-81a5-11eb-8bce-e3140116905d.png)
+- Lanuch Appliction
+  - ![image](https://user-images.githubusercontent.com/29477330/110700710-1d887080-81a5-11eb-8bce-e3140116905d.png)
 
-After Click Start Button
-![image](https://user-images.githubusercontent.com/29477330/110700779-342ec780-81a5-11eb-8b92-d524ece2ddf8.png)
+- After Click Start Button
+  - ![image](https://user-images.githubusercontent.com/29477330/110700779-342ec780-81a5-11eb-8b92-d524ece2ddf8.png)
 
-After Click Stop Button
-![image](https://user-images.githubusercontent.com/29477330/110700895-57597700-81a5-11eb-95e9-142e54b5e7ae.png)
+- After Click Stop Button
+  - ![image](https://user-images.githubusercontent.com/29477330/110700895-57597700-81a5-11eb-95e9-142e54b5e7ae.png)
 
